@@ -1,0 +1,22 @@
+:host {
+    margin-top: 10px;
+}
+
+app-carousel>swiper>.swiper.s-wrapper {
+    margin: 20px auto;
+    width: 100%;
+}
+  
+@media (min-width: 600px) {
+    app-carousel>swiper>.swiper.s-wrapper {
+        width: 500px;
+    }
+}
+
+@media (min-width: 750px) {
+    app-carousel>swiper>.swiper.s-wrapper {
+        width: 650px;
+    }
+}
+
+@import '~swiper/dist/css/swiper.min.css';

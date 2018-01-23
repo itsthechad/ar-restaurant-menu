@@ -1,0 +1,9 @@
+
+export const environment = {
+  production: true,
+  scConnected: true,
+  scApiHost: '',
+  scApiKey: '<%= SC_API_KEY %>',
+  defaultLanguage: 'en',
+  defaultServerRoute: '/',
+};

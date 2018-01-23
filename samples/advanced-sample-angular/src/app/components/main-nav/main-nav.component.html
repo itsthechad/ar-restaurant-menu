@@ -1,0 +1,12 @@
+<mat-toolbar class="toolbar">
+  <!-- TODO: i18n -->
+  <button class="home" mat-button [routerLink]="language">Home</button>
+  <div class="navigation">
+    <app-main-nav-item *ngFor="let navItem of navItems" [language]="language" [navItem]="navItem"></app-main-nav-item>
+    <button mat-button [matMenuTriggerFor]="languageMenu">Language</button>
+    <mat-menu #languageMenu="matMenu">
+      <button mat-menu-item (click)="changeLanguage('en')">English (US)</button>
+      <button mat-menu-item (click)="changeLanguage('es-MX')">Español (MX)</button>
+    </mat-menu>
+  </div>
+</mat-toolbar>
