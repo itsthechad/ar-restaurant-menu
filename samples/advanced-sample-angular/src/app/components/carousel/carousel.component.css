@@ -1,3 +1,4 @@
+@import '~swiper/dist/css/swiper.min.css';
 :host {
     margin-top: 10px;
 }
@@ -18,5 +19,3 @@ app-carousel>swiper>.swiper.s-wrapper {
         width: 650px;
     }
 }
-
-@import '~swiper/dist/css/swiper.min.css';
