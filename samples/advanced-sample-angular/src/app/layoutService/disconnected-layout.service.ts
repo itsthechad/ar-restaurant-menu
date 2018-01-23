@@ -3,7 +3,7 @@ import { LayoutService, LayoutServiceError } from './layout.service';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { zip as observableZip } from 'rxjs/observable/zip';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 import { _throw as observableThrow } from 'rxjs/observable/throw';
 import { map } from 'rxjs/operators/map';
 import { catchError } from 'rxjs/operators/catchError';
@@ -27,7 +27,10 @@ export class DisconnectedLayoutService implements LayoutService {
         const routeData$ = this.http.get(`/sitecore/data/routes${routePath}/${language}.json`, this.getHttpOptions())
             .pipe(map(routeData => convertRouteToLayoutServiceFormat(routeData)));
         const contextData$ = this.http.get(`/sitecore/data/context/${language}.json`, this.getHttpOptions());
-        return observableZip(routeData$, contextData$, (routeData, contextData) => {
+        return forkJoin([routeData$, contextData$]).pipe(
+            map(results => {
+                const routeData = results[0];
+                const contextData = results[1];
             if (routeData.context && routeData.route) {
                 // contains context and route
                 return {
@@ -40,7 +43,7 @@ export class DisconnectedLayoutService implements LayoutService {
                     route: routeData
                 }
             };
-        }).pipe(
+            }),
             catchError((error) => this.getLayoutServiceError(error))
         );
     }

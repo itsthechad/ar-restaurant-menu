@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { of as observableOf } from 'rxjs/observable/of';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { map } from 'rxjs/operators/map';
+import { shareReplay } from 'rxjs/operators/shareReplay';
 
 export const jssKey = makeStateKey<JssState>('jss');
 
@@ -58,7 +59,8 @@ export class JssService {
         result.language = language;
         result.serverRoute = route;
         return result;
-      })
+      }),
+      shareReplay(1)
     );
 
     // subscribe to it ourselves so we can maintain current state
