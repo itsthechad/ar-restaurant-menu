@@ -298,3 +298,6 @@ Src/server/deploy.txt
 
 # CocoaPods
 Pods
+
+# Config file with API key
+*/src/config.js

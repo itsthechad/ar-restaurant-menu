@@ -13,7 +13,10 @@ import {
   ViroText
 } from 'react-viro';
 
-const VIRO_API_KEY = 'add your Viro api key here';
+// See instructions in ./cofig.example.js for setting up Viro API key
+import { config } from './config';
+
+const VIRO_API_KEY = config.viroAPIKey;
 
 const styles = StyleSheet.create({
   container: {
