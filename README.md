@@ -1,66 +1,74 @@
-# Sitecore JavaScript Services
 
-This repository contains samples to help you get started with JSS.
+# JSS + React Native + Viro = Sitecore AR/VR
 
-You can also use this repo to file issues.
+This is a very rough, in-progress attempt to integrate [Viro's AR/VR library](https://viromedia.com/) into JSS' basic-sample-react-native project. I started by forking the [JSS repo](https://github.com/Sitecore/jss) and following [Viro's instructions for integrating with an existing React Native project](https://docs.viromedia.com/docs/integrating-with-react-native-projects). Of course, it wasn't so simple, so I figured creating this starting project with that process out of the way would help myself and, possibly, others.
 
-Here are the samples included in this repo:
+So that's what this is: a rough starting point for creating JSS/Viro apps.
 
-1. [Basic sample in React.js](/samples/basic-sample-react)
-   
-   This is the most barebones single page app with minimum dependencies and is built for learning purposes only.
-   [Check out the walkthrough here](https://jss.sitecore.net/#/cookbook/basic-app).
+# Limitations
 
-1. [Advanced sample in React.js](/samples/advanced-sample-react)
+* This is very rough right now. This is also my first time really getting into React Native. So there's probably a lot I'm doing wrong here. So take all this with a grain of salt. ;)
 
-    More feature rich and opinionated sample site wired with redux, implements routing via React Router, translation/localization features, route data as local .json files, context, content and other features.
+* I'm using a Mac, so Mac/iOS/Xcode is all that's covered here. No Windows/Android yet.
 
-1. [Basic sample in Angular 5](/samples/basic-sample-angular)
+# Prerequisites (copied from the JSS project readme)
 
-   This is the most barebones single page app with minimum dependencies and is built for learning purposes only.
+The basic sample for React Native is based on a project created via the React Native CLI, e.g. `react-native init`
 
-1. [Advanced sample in Angular 5](/samples/advanced-sample-angular)
+Your first step will be to follow the instructions on this page: https://facebook.github.io/react-native/docs/getting-started.html
 
-    This is a more full-featured and opinionated app built routing support, multiple language support, dictionary and Material UI design framework.
+Choose the `Building Projects with Native Code` tab, then choose your Development OS and app Target OS.
 
+The installation process for all the necessary Android/iOS dependencies and tools can take a significant amount of time - plan accordingly.
 
-1. [Basic sample in Vue.js](/samples/basic-sample-vue-web)
-   
-   This is the most barebones single page app with minimum dependencies and is built for learning purposes only using Vue.js and `sitecore-jss-vue`.
-   [Check out the walkthrough here](https://jss.sitecore.net/#/cookbook/basic-app).
+# Getting Started
 
-1. [Wizard sample app in React](/samples/embedded-wizard-sample-react)
+1. Ensure you have completed the Prerequisites section and have confirmed you're able to run the `AwesomeProject` sample that the instructions direct you to create.
 
-    This app shows how to embed client-side application inside an existing Sitecore MVC app. [Read more here](https://jss.sitecore.net/#/cookbook/recipes/embedded-wizard-sample).
+1. In a new folder, clone or download this jss-viro repo.
 
-1. [Basic sample in Vue.js](/samples/basic-sample-vue-web)
-   
-   This is the most barebones single page app with minimum dependencies and is built for learning purposes only using Vue.js and `sitecore-jss-vue`.
-   [Check out the walkthrough here](https://jss.sitecore.net/#/cookbook/basic-app).
+1. Navigate to `jss-viro/basic-sample-react-native`
 
-1. [Basic React Native app](/samples/basic-sample-react-native)
+1. Run `npm install`
 
-    This app shows our first and yet experimental support for React Native.
+1. Make sure you have cocoapods. Type `brew install cocoapods` to install.
+	* (Cocoapods is like npm for Xcode projects. The next two steps will setup more required dependencies.)
 
-1. [Individual components sample](/samples/individual-components-sample-react-web)
+1. Navigate to `jss-viro/basic-sample-react-native/ios`
 
-    This project shows how to deploy individual JavaScript components to Sitecore (new feature in Preview 3).
+1. Run `pod install` (installs dependencies listed in Podfile)
 
-1. [Basic sample with React/GraphQL/Apollo client](/samples/basic-sample-react-graphql)
+1. Cause an error and then fix it (This is an unfortunate step I don't know how to get around yet. The below fix is taken from [this Viro page](https://docs.viromedia.com/docs/integrating-with-react-native-projects)):
 
-    Though this app looks like other basic app samples, it is actually a feature rich sample app showing 
-    how to start consuming Sitecore.GraphQL services.
+	1. In `jss-viro/basic-sample-react-native`, run `npm run start-ios`
 
-1. [Node/Express scaffolding for Server-Side Rendering](/samples/node-express-ssr)
+	1. Two Terminal windows should open, and one will ultimately result in an error regarding vlog_is_on.cc and duplicate symbols.
 
-    This scaffolding is setup for Advanced sample app allowing for server-side rendering with the http proxy to Sitecore Content Delivery instance.
+	1. Close Terminal
 
-## Getting started
-- [Official JSS documentation](https://jss.sitecore.net/)
-- [StackExchange](https://sitecore.stackexchange.com/)
-- [Community Slack](https://sitecorechat.slack.com/messages/jss)
-- [Sitecore Community Forum](https://community.sitecore.net/developers/f/40)
+	1. Open `jss-viro/basic-sample-react-native/node_modules/react-native/third-party/glog-0.3.4/src/vlog_is_on.cc`
 
-## Feature requests
-[![Feature Requests](http://feathub.com/Sitecore/jss?format=svg)](http://feathub.com/Sitecore/jss)
+	1. Change the following lines to match the highlighted bits below:
 
+		* Line 52: GLOG_DEFINE_int32(**v2**, 0, "Show all VLOG(m) messages for m <= this."
+
+		* Line 55: GLOG_DEFINE_string(**vmodule2**…
+
+		* Line 133: const char* vmodule = **FLAGS_vmodule2**.c_str()
+
+1. Go back to `jss-viro/basic-sample-react-native`, and run `npm run start-ios` again. The build should succeed this time. Leave these tabs open in Terminal.
+
+1. Now open `jss-viro/basic-sample-react-native/ios/BasicSampleReactNative.xcworkspace` within Xcode.
+
+1. Go through the Xcode signing process ([see here](https://facebook.github.io/react-native/docs/running-on-device)).
+
+1. In Xcode, choose your device (plugged in or [setup wirelessly](https://medium.com/swiftist/wireless-debugging-xcode-b6e98e26e022)) and then run.
+1. The app should run on your device.
+
+# References
+This project was cobbled together using the following sources and guides:
+* https://jss.sitecore.net/#/react-native?id=sitecore-jss-react-native
+* https://github.com/Sitecore/jss/tree/master/samples/basic-sample-react-native
+* https://docs.viromedia.com/docs/integrating-with-react-native-projects
+* https://facebook.github.io/react-native/docs/getting-started
+* https://github.com/viromedia/viro
