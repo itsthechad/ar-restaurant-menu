@@ -295,3 +295,6 @@ Src/server/deploy.txt
 /Src/demo/Siteflix-Native/android/app/build/tmp
 /Src/demo/Siteflix-Native/android/app/siteflix-release-key.keystore
 /Src/demo/Siteflix-Native/android/build/intermediates
+
+# CocoaPods
+Pods
