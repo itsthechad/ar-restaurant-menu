@@ -1,39 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, RefreshControl } from 'react-native';
+import { Text, View } from 'react-native';
 import { Placeholder, SitecoreContext } from '@sitecore-jss/sitecore-jss-react-native';
 // eslint-disable-next-line
 import { getRouteData } from 'data-service';
 import componentFactory from './componentFactory';
-import { images, models } from 'static-assets';
-
-import {
-  ViroVRSceneNavigator,
-  ViroARSceneNavigator,
-  ViroScene,
-  ViroARScene,
-  ViroAmbientLight,
-  ViroText,
-  ViroImage,
-  ViroNode,
-  ViroSpotLight,
-  Viro3DObject
-} from 'react-viro';
-
-// See instructions in ./cofig.example.js for setting up Viro API key
-import { config } from './config';
-
-const VIRO_API_KEY = config.viroAPIKey;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  contentContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 class App extends React.Component {
   constructor() {
@@ -42,8 +12,6 @@ class App extends React.Component {
       loading: true,
       route: null,
       error: null,
-      showARScene: true,
-      showVRScene: false
     };
     this.loadData = this.loadData.bind(this);
   }
@@ -64,69 +32,6 @@ class App extends React.Component {
   }
 
   render() {
-    if (this.state.showARScene) {
-      // Display a very basic Viro AR scene
-      return (
-        <ViroARSceneNavigator
-          initialScene={{
-            scene: () => {
-              return (
-                <ViroARScene>
-                  <ViroAmbientLight color={"#aaaaaa"} influenceBitMask={1} />
-                  <ViroText text='React Native + JSS + Viro = Sitecore AR' scale={[.5, .5, .5]} position={[0, 0, -1]} width={2} transformBehaviors={["billboardY"]} />
-                  <ViroImage source={images['/assets/img/banner.jpg']} width={1} height={.2} position={[-2, .5, -1]} />
-                  
-                  <ViroNode position={[.5, -.5, -.5]} dragType="FixedToWorld" onDrag={() => { }} >
-                    <ViroSpotLight
-                      innerAngle={5}
-                      outerAngle={45}
-                      direction={[0, -1, -.2]}
-                      position={[0, 3, 0]}
-                      color="#ffffff"
-                      castsShadow={true}
-                      influenceBitMask={4}
-                      shadowMapSize={2048}
-                      shadowNearZ={2}
-                      shadowFarZ={5}
-                      shadowOpacity={.7} />
-
-                    <Viro3DObject
-                      source={models['/data/media/model/emoji_smile/emoji_smile.vrx']}
-                      position={[0, .15, 0]}
-                      scale={[.3, .3, .3]}
-                      type="VRX"
-                      lightReceivingBitMask={5}
-                      shadowCastingBitMask={4}
-                      resources={[
-                        models['/data/media/model/emoji_smile/emoji_smile_diffuse.png'],
-                        models['/data/media/model/emoji_smile/emoji_smile_normal.png'],
-                        models['/data/media/model/emoji_smile/emoji_smile_specular.png']
-                      ]} />
-                  </ViroNode>
-
-                </ViroARScene>
-              );
-            }
-          }}
-          apiKey={VIRO_API_KEY} />
-      );
-    }
-    if (this.state.showVRScene) {
-      // Display a very basic Viro VR scene
-      return (
-        <ViroVRSceneNavigator
-          initialScene={{
-            scene: () => {
-              return (
-                <ViroScene>
-                  <ViroText text='React Native + JSS + Viro = Sitecore VR' scale={[.5, .5, .5]} position={[0, 0, -1]} width={2} transformBehaviors={["billboardY"]} />
-                </ViroScene>
-              );
-            }
-          }}
-          apiKey={VIRO_API_KEY} />
-      );
-    }
     if (this.state.loading) {
       return (
         <View>
@@ -142,18 +47,12 @@ class App extends React.Component {
       );
     }
 
-    const refreshControl = (
-      <RefreshControl refreshing={this.state.loading} onRefresh={this.loadData} />
-    );
     return (
       <SitecoreContext componentFactory={componentFactory}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}
-          refreshControl={refreshControl}
-        >
-          <Placeholder name="main" rendering={this.state.route} />
-        </ScrollView>
+        <View style={{ flex: 1 }}>
+          <Placeholder name="primary" rendering={this.state.route} />
+          <Placeholder name="secondary" rendering={this.state.route} />
+        </View>
       </SitecoreContext>
     );
   }

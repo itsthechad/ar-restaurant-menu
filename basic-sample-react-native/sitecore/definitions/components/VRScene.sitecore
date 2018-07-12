@@ -1,0 +1,11 @@
+import { addComponent, CommonFieldTypes } from '@sitecore-jss/sitecore-jss-manifest';
+
+export default (manifest) => {
+  addComponent(manifest, {
+    name: 'VRScene',
+    displayName: 'VRScene',
+    fields: [
+      { name: 'text', type: CommonFieldTypes.SingleLineText },
+    ],
+  });
+};

@@ -1,0 +1,12 @@
+import { addComponent, CommonFieldTypes } from '@sitecore-jss/sitecore-jss-manifest';
+
+export default (manifest) => {
+  addComponent(manifest, {
+    name: 'BottomUI',
+    displayName: 'BottomUI',
+    fields: [
+      { name: 'title', type: CommonFieldTypes.SingleLineText },
+      { name: 'hideComponent', type: CommonFieldTypes.SingleLineText }
+    ],
+  });
+};
