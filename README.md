@@ -65,6 +65,13 @@ The installation process for all the necessary Android/iOS dependencies and tool
 1. In Xcode, choose your device (plugged in or [setup wirelessly](https://medium.com/swiftist/wireless-debugging-xcode-b6e98e26e022)) and then run.
 1. The app should run on your device.
 
+# Now What?
+Try the following within data/routes/en.json
+* Change "ARScene" to "VRScene". Now the app loads a VR scene instead of the default AR scene.
+* Edit the position on one of the model objects.
+* Remove a model object, or duplicate one with a modified position.
+* Change "hideComponent" to "true" for the "BottomUI" component. This is recommended when using the VR scene.
+
 # References
 This project was cobbled together using the following sources and guides:
 * https://jss.sitecore.net/#/react-native?id=sitecore-jss-react-native
