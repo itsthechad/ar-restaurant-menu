@@ -1,7 +1,9 @@
 import React from 'react';
 import { View } from 'react-native';
 
-import { images, models } from 'static-assets';
+import { Placeholder } from '@sitecore-jss/sitecore-jss-react-native';
+
+import { images, modelAssets } from 'static-assets';
 
 import {
   ViroARSceneNavigator,
@@ -10,8 +12,7 @@ import {
   ViroText,
   ViroImage,
   ViroNode,
-  ViroSpotLight,
-  Viro3DObject
+  ViroSpotLight
 } from 'react-viro';
 
 // See instructions in ./cofig.example.js for setting up Viro API key
@@ -35,14 +36,16 @@ class ARScene extends React.Component {
   }
 
   renderScene() {
+    var { fields, rendering } = this.props;
+
     return (
       <ViroARScene>
 
         <ViroAmbientLight color={"#aaaaaa"} influenceBitMask={1} />
-        <ViroText text={this.props.fields.text.value} scale={[.5, .5, .5]} position={[0, 0, -1]} width={2} transformBehaviors={["billboardY"]} />
-        <ViroImage source={images['/assets/img/banner.jpg']} width={1} height={.2} position={[-2, .5, -1]} />
+        <ViroText text={fields.text.editable} scale={[.5, .5, .5]} position={[0, .1, -1]} width={2} transformBehaviors={["billboardY"]} />
+        <ViroImage source={images['/assets/img/banner.jpg']} width={1} height={.4} position={[0, .6, -1]} />
 
-        <ViroNode position={[.5, -.5, -.5]} dragType="FixedToWorld" onDrag={() => { }} >
+        <ViroNode position={[0, 0, -1]} dragType="FixedToWorld" onDrag={() => { }} >
           <ViroSpotLight
             innerAngle={5}
             outerAngle={45}
@@ -56,23 +59,12 @@ class ARScene extends React.Component {
             shadowFarZ={5}
             shadowOpacity={.7} />
 
-          <Viro3DObject
-            source={models['/data/media/model/emoji_smile/emoji_smile.vrx']}
-            position={[0, .15, 0]}
-            scale={[.3, .3, .3]}
-            type="VRX"
-            lightReceivingBitMask={5}
-            shadowCastingBitMask={4}
-            resources={[
-              models['/data/media/model/emoji_smile/emoji_smile_diffuse.png'],
-              models['/data/media/model/emoji_smile/emoji_smile_normal.png'],
-              models['/data/media/model/emoji_smile/emoji_smile_specular.png']
-            ]} />
+          <Placeholder name="models" rendering={rendering} />
         </ViroNode>
 
       </ViroARScene>
     );
   }
-}
+} // ARScene
 
 export default ARScene;

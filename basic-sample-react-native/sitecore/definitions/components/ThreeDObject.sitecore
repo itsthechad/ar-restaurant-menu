@@ -1,0 +1,14 @@
+import { addComponent, CommonFieldTypes } from '@sitecore-jss/sitecore-jss-manifest';
+
+export default (manifest) => {
+  addComponent(manifest, {
+    name: 'ThreeDObject',
+    displayName: 'ThreeDObject',
+    fields: [
+      { name: 'name', type: CommonFieldTypes.SingleLineText },
+      { name: 'positionX', type: CommonFieldTypes.number },
+      { name: 'positionY', type: CommonFieldTypes.number },
+      { name: 'positionZ', type: CommonFieldTypes.number },
+    ],
+  });
+};
