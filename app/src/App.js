@@ -1,3 +1,6 @@
+// TODO: Don't ignore these warnings!
+console.ignoredYellowBox = ['Warning: componentWill'];
+
 import React from 'react';
 import { Text, View } from 'react-native';
 import { Placeholder, SitecoreContext } from '@sitecore-jss/sitecore-jss-react-native';
@@ -49,10 +52,7 @@ class App extends React.Component {
 
     return (
       <SitecoreContext componentFactory={componentFactory}>
-        <View style={{ flex: 1 }}>
-          <Placeholder name="primary" rendering={this.state.route} />
-          <Placeholder name="secondary" rendering={this.state.route} />
-        </View>
+        <Placeholder name="primary" rendering={this.state.route} />
       </SitecoreContext>
     );
   }

@@ -1,0 +1,80 @@
+{
+  "name": "home",
+  "displayName": "Home",
+  "placeholders": {
+    "primary": [
+      {
+        "componentName": "ARController",
+        "fields": {
+          "text": {
+            "value": "Welcome to JSS AR/VR!"
+          }        
+        },
+        "params": {
+          "data": [
+            {
+              "category": "Drinks",
+              "items": [
+                {
+                  "name": "emojiSmiley",
+                  "displayName": "Coke",
+                  "description": "Delicious",
+                  "nutrition": "Very unhealthy"
+                },
+                {
+                  "name": "soccerBall",
+                  "displayName": "Beer",
+                  "description": "Tasty",
+                  "nutrition": "Unhealthy"
+                }
+              ]
+            },
+            {
+              "category": "Apps",
+              "items": [
+                {
+                  "name": "emojiSmiley",
+                  "displayName": "Bread",
+                  "description": "Flakey and warm",
+                  "nutrition": "Unhealthy"
+                },
+                {
+                  "name": "soccerBall",
+                  "displayName": "Chips",
+                  "description": "Crispy",
+                  "nutrition": "Unhealthy"
+                }
+              ]
+            }
+          ]
+        },
+        "placeholders": {
+          "models": [
+            {
+              "componentName": "ThreeDObject",
+              "fields": {
+                "name": {
+                  "value": "soccerBall"
+                },
+                "positionX": { "value": 0.1 },
+                "positionY": { "value": 0.1 },
+                "positionZ": { "value": 0 }
+              }
+            },
+            {
+              "componentName": "ThreeDObject",
+              "fields": {
+                "name": {
+                  "value": "emojiSmile"
+                },
+                "positionX": { "value": -0.1 },
+                "positionY": { "value": -0.1 },
+                "positionZ": { "value": 0 }
+              }
+            }
+          ]
+        }
+      }      
+    ]
+  }
+}

@@ -20,7 +20,7 @@ import { config } from '../config';
 
 const VIRO_API_KEY = config.viroAPIKey;
 
-class ARScene extends React.Component {
+class ARController extends React.Component {
 
   render() {
     // Display a very basic Viro AR scene
@@ -36,7 +36,7 @@ class ARScene extends React.Component {
   }
 
   renderScene() {
-    var { fields, rendering } = this.props;
+    var { fields, rendering, params } = this.props;
 
     return (
       <ViroARScene>
@@ -65,6 +65,6 @@ class ARScene extends React.Component {
       </ViroARScene>
     );
   }
-} // ARScene
+} // ARController
 
-export default ARScene;
+export default ARController;

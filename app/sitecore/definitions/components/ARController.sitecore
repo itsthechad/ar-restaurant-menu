@@ -2,8 +2,8 @@ import { addComponent, CommonFieldTypes } from '@sitecore-jss/sitecore-jss-manif
 
 export default (manifest) => {
   addComponent(manifest, {
-    name: 'ARScene',
-    displayName: 'ARScene',
+    name: 'ARController',
+    displayName: 'ARController',
     fields: [
       { name: 'text', type: CommonFieldTypes.SingleLineText },
     ],
