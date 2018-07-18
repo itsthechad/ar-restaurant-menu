@@ -1,18 +1,17 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
-import { Placeholder } from '@sitecore-jss/sitecore-jss-react-native';
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
-import { images, modelAssets } from 'static-assets';
+import { modelAssets } from 'static-assets';
 
 import {
   ViroARSceneNavigator,
   ViroARScene,
   ViroAmbientLight,
-  ViroText,
-  ViroImage,
   ViroNode,
-  ViroSpotLight
+  ViroSpotLight,
+  Viro3DObject
 } from 'react-viro';
 
 // See instructions in ./cofig.example.js for setting up Viro API key
@@ -21,31 +20,54 @@ import { config } from '../config';
 const VIRO_API_KEY = config.viroAPIKey;
 
 class ARController extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      currentCategory: 0,
+      currentItem: 0
+    }
+
+    this.renderScene = this.renderScene.bind(this);
+    this.renderGestureRecognizer = this.renderGestureRecognizer.bind(this);
+    this.onSwipe = this.onSwipe.bind(this);
+  }
 
   render() {
-    // Display a very basic Viro AR scene
+    var { params: { data } } = this.props;
+    const { currentCategory, currentItem } = this.state;
+
     return (
       <View style={{ flex: 1 }}>
+
         <ViroARSceneNavigator
           initialScene={{
-            scene: this.renderScene.bind(this)
+            scene: this.renderScene
           }}
           apiKey={VIRO_API_KEY} />
-      </View>
+
+        { this.renderGestureRecognizer() }
+
+        <Text style={styles.itemText} >
+          { `${data[currentCategory].category} / ${data[currentCategory].items[currentItem].displayName}` }
+        </Text>
+
+        </View>
     );
   }
 
   renderScene() {
-    var { fields, rendering, params } = this.props;
+    var { params: { data } } = this.props;
+    var { currentCategory, currentItem } = this.state;
+
+    const modelName = data[currentCategory].items[currentItem].name;
+    const modelSource = modelAssets[modelName].model;
+    const modelResources = modelAssets[modelName].resources;
 
     return (
       <ViroARScene>
-
         <ViroAmbientLight color={"#aaaaaa"} influenceBitMask={1} />
-        <ViroText text={fields.text.editable} scale={[.5, .5, .5]} position={[0, .1, -1]} width={2} transformBehaviors={["billboardY"]} />
-        <ViroImage source={images['/assets/img/banner.jpg']} width={1} height={.4} position={[0, .6, -1]} />
-
-        <ViroNode position={[0, 0, -1]} dragType="FixedToWorld" onDrag={() => { }} >
+        <ViroNode position={[0, 0, -1]} >
           <ViroSpotLight
             innerAngle={5}
             outerAngle={45}
@@ -58,13 +80,90 @@ class ARController extends React.Component {
             shadowNearZ={2}
             shadowFarZ={5}
             shadowOpacity={.7} />
-
-          <Placeholder name="models" rendering={rendering} />
+          <Viro3DObject
+            source={modelSource}
+            resources={[...modelResources]}
+            position={[ 0, 0, -1 ]}
+            scale={[.3, .3, .3]}
+            type="VRX"
+            lightReceivingBitMask={5}
+            shadowCastingBitMask={4}
+            onDrag={this.onDrag} />
         </ViroNode>
-
       </ViroARScene>
     );
   }
+
+  renderGestureRecognizer() {
+    const swipeConfig = {
+      velocityThreshold: 0.3,
+      directionalOffsetThreshold: 80
+    };
+    const style = {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0
+    };
+
+    return (
+      <GestureRecognizer
+        onSwipe={this.onSwipe}
+        config={swipeConfig}
+        style={style} />
+    );
+  }
+
+  onSwipe(direction, state) {
+    var { params: { data } } = this.props;
+    const { currentCategory, currentItem } = this.state;
+    const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
+
+    var newCategory;
+    var newItem;
+
+    switch (direction) {
+      case SWIPE_UP:
+        newCategory = currentCategory - 1;
+        if (newCategory < 0) {
+          newCategory = data.length - 1;
+        }
+        this.setState({ currentCategory: newCategory });
+        break;
+      case SWIPE_DOWN:
+        newCategory = currentCategory + 1;
+        if (newCategory > data.length - 1) {
+          newCategory = 0;
+        }
+        this.setState({ currentCategory: newCategory });
+        break;
+      case SWIPE_LEFT:
+        newItem = currentItem - 1;
+        if (newItem < 0) {
+          newItem = data[currentCategory].items.length - 1;
+        }
+        this.setState({ currentItem: newItem });
+        break;
+      case SWIPE_RIGHT:
+        newItem = currentItem + 1;
+        if (newItem > data[currentCategory].items.length - 1) {
+          newItem = 0;
+        }
+        this.setState({ currentItem: newItem });
+        break;
+    }
+  }
 } // ARController
+
+const styles = StyleSheet.create({
+  itemText: {
+    position: 'absolute',
+    top: 40,
+    left: 40,
+    fontSize: 40,
+    fontWeight: 'bold'
+  }
+});
 
 export default ARController;
