@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
-import { modelAssets } from 'static-assets';
+import { model } from 'static-assets';
 
 import {
   ViroARSceneNavigator,
@@ -25,7 +25,7 @@ class ARController extends React.Component {
 
     this.state = {
       currentCategory: 0,
-      currentItem: 0
+      currentItemArray: []  // Will hold the current item index for each category
     }
 
     this.renderScene = this.renderScene.bind(this);
@@ -33,9 +33,22 @@ class ARController extends React.Component {
     this.onSwipe = this.onSwipe.bind(this);
   }
 
+  componentWillMount() {
+    var { fields: { items } } = this.props;
+
+    // Initialize each category's item index to zero
+    this.setState({
+      currentItemArray: items.map((item) => {
+        return 0;
+      })
+    })
+  }
+
   render() {
-    var { params: { data } } = this.props;
-    const { currentCategory, currentItem } = this.state;
+    var { fields: { items } } = this.props;
+    const { currentCategory, currentItemArray } = this.state;
+
+    var currentItem = currentItemArray[currentCategory];
 
     return (
       <View style={{ flex: 1 }}>
@@ -49,7 +62,10 @@ class ARController extends React.Component {
         { this.renderGestureRecognizer() }
 
         <Text style={styles.itemText} >
-          { `${data[currentCategory].category} / ${data[currentCategory].items[currentItem].displayName}` }
+          {/* Debugging version */}
+          { `${items[currentCategory].fields.category}(${currentCategory}) / ${items[currentCategory].fields.items[currentItem].displayName}(${currentItem})` }
+          {/* Actual version */}
+          {/* { `${items[currentCategory].fields.category} / ${items[currentCategory].fields.items[currentItem].displayName}` } */}
         </Text>
 
         </View>
@@ -57,12 +73,13 @@ class ARController extends React.Component {
   }
 
   renderScene() {
-    var { params: { data } } = this.props;
-    var { currentCategory, currentItem } = this.state;
+    var { fields: { items } } = this.props;
+    var { currentCategory, currentItemArray } = this.state;
 
-    const modelName = data[currentCategory].items[currentItem].name;
-    const modelSource = modelAssets[modelName].model;
-    const modelResources = modelAssets[modelName].resources;
+    var currentItem = currentItemArray[currentCategory];
+
+    const modelName = items[currentCategory].fields.items[currentItem].name;
+    const currentModel = model[modelName];
 
     return (
       <ViroARScene>
@@ -81,11 +98,11 @@ class ARController extends React.Component {
             shadowFarZ={5}
             shadowOpacity={.7} />
           <Viro3DObject
-            source={modelSource}
-            resources={[...modelResources]}
-            position={[ 0, 0, -1 ]}
-            scale={[.3, .3, .3]}
-            type="VRX"
+            source={currentModel.source}
+            resources={[...currentModel.resources]}
+            position={currentModel.position}
+            scale={currentModel.scale}
+            type={currentModel.type}
             lightReceivingBitMask={5}
             shadowCastingBitMask={4}
             onDrag={this.onDrag} />
@@ -116,41 +133,46 @@ class ARController extends React.Component {
   }
 
   onSwipe(direction, state) {
-    var { params: { data } } = this.props;
-    const { currentCategory, currentItem } = this.state;
+    var { fields: { items } } = this.props;
+    const { currentCategory, currentItemArray } = this.state;
     const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
+
+    var currentItem = currentItemArray[currentCategory];
 
     var newCategory;
     var newItem;
+    var newItemArray = [...currentItemArray];
 
     switch (direction) {
-      case SWIPE_UP:
+      case SWIPE_DOWN:
         newCategory = currentCategory - 1;
         if (newCategory < 0) {
-          newCategory = data.length - 1;
+          newCategory = items.length - 1;
         }
         this.setState({ currentCategory: newCategory });
         break;
-      case SWIPE_DOWN:
+      case SWIPE_UP:
         newCategory = currentCategory + 1;
-        if (newCategory > data.length - 1) {
+        if (newCategory > items.length - 1) {
           newCategory = 0;
         }
         this.setState({ currentCategory: newCategory });
         break;
-      case SWIPE_LEFT:
+      case SWIPE_RIGHT:
         newItem = currentItem - 1;
         if (newItem < 0) {
-          newItem = data[currentCategory].items.length - 1;
+          newItem = items[currentCategory].fields.items.length - 1;
         }
-        this.setState({ currentItem: newItem });
+        newItemArray[currentCategory] = newItem;
+        this.setState({ currentItemArray: newItemArray });
         break;
-      case SWIPE_RIGHT:
+      case SWIPE_LEFT:
         newItem = currentItem + 1;
-        if (newItem > data[currentCategory].items.length - 1) {
+        if (newItem > items[currentCategory].fields.items.length - 1) {
           newItem = 0;
         }
-        this.setState({ currentItem: newItem });
+        newItemArray[currentCategory] = newItem;
+        this.setState({ currentItemArray: newItemArray });
         break;
     }
   }

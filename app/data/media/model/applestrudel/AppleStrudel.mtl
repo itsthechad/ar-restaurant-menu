@@ -1,0 +1,14 @@
+newmtl Default
+Kd 1 1 1
+Ke 0.05 0.05 0.05
+Ka 1 1 1
+Ks 0 0 0
+Ns 100
+Tr 0
+d 1
+Ni 0
+Tf 1 1 1
+map_Kd freeobjects&produkte/3dscans/AppleStrudel/AppleStrudel.jpg
+map_bump freeobjects&produkte/3dscans/AppleStrudel/applestrudel_nmap.jpg
+bump freeobjects&produkte/3dscans/AppleStrudel/applestrudel_nmap.jpg
+

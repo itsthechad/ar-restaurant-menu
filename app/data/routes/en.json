@@ -5,41 +5,119 @@
     "primary": [
       {
         "componentName": "ARController",
-        "params": {
-          "data": [
+        "fields": {
+          "items": [
             {
-              "category": "Drinks",
-              "items": [
-                {
-                  "name": "emojiSmile",
-                  "displayName": "Coke",
-                  "description": "Delicious",
-                  "nutrition": "Very unhealthy"
-                },
-                {
-                  "name": "soccerBall",
-                  "displayName": "Beer",
-                  "description": "Tasty",
-                  "nutrition": "Unhealthy"
-                }
-              ]
+              "fields": {
+                "category": "Drinks",
+                "items": [
+                  {
+                    "name": "margarita",
+                    "displayName": "margarita",
+                    "description": "Description field",
+                    "nutrition": "Nutrition field"
+                  },
+                  {
+                    "name": "mixdrink",
+                    "displayName": "mixdrink",
+                    "description": "Description field",
+                    "nutrition": "Nutrition field"
+                  },
+                  {
+                    "name": "emojiSmile",
+                    "displayName": "Emoji smile",
+                    "description": "Description field",
+                    "nutrition": "Nutrition field"
+                  },
+                  {
+                    "name": "emojiAngry",
+                    "displayName": "Emoji angry",
+                    "description": "Description field",
+                    "nutrition": "Nutrition field"
+                  },
+                  {
+                    "name": "soccerBall",
+                    "displayName": "Beer",
+                    "description": "Description field",
+                    "nutrition": "Nutrition field"
+                  }
+                ]
+              }
             },
             {
-              "category": "Apps",
-              "items": [
-                {
-                  "name": "emojiSmile",
-                  "displayName": "Bread",
-                  "description": "Flakey and warm",
-                  "nutrition": "Unhealthy"
-                },
-                {
-                  "name": "soccerBall",
-                  "displayName": "Chips",
-                  "description": "Crispy",
-                  "nutrition": "Unhealthy"
-                }
-              ]
+              "fields": {
+                "category": "Starters",
+                "items": [
+                  {
+                    "name": "emojiSmile",
+                    "displayName": "Smile",
+                    "description": "Description field and warm",
+                    "nutrition": "Nutrition field"
+                  },
+                  {
+                    "name": "soccerBall",
+                    "displayName": "Soccer",
+                    "description": "Description field",
+                    "nutrition": "Nutrition field"
+                  }
+                ]
+              }
+            },
+            {
+              "fields": {
+                "category": "Entrees",
+                "items": [
+                  {
+                    "name": "emojiSmile",
+                    "displayName": "Smile",
+                    "description": "Description field and warm",
+                    "nutrition": "Nutrition field"
+                  },
+                  {
+                    "name": "soccerBall",
+                    "displayName": "Soccer",
+                    "description": "Description field",
+                    "nutrition": "Nutrition field"
+                  },
+                  {
+                    "name": "emojiAngry",
+                    "displayName": "Emoji angry",
+                    "description": "Description field",
+                    "nutrition": "Nutrition field"
+                  }
+                ]
+              }
+            },
+            {
+              "fields": {
+                "category": "Desserts",
+                "items": [
+                  {
+                    "name": "cake",
+                    "displayName": "cake",
+                    "description": "Description field",
+                    "nutrition": "Nutrition field"
+                  },
+                  {
+                    "name": "applestrudel",
+                    "displayName": "applestrudel",
+                    "description": "Description field",
+                    "nutrition": "Nutrition field"
+                  },
+                  {
+                    "name": "emojiSmile",
+                    "displayName": "Bread",
+                    "description": "Description field and warm",
+                    "nutrition": "Nutrition field"
+                  },
+                  {
+                    "name": "soccerBall",
+                    "displayName": "Chips",
+                    "description": "Description field",
+                    "nutrition": "Nutrition field"
+                  }
+                ]
+              }
             }
           ]
         }
