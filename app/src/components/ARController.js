@@ -193,7 +193,7 @@ ViroARTrackingTargets.createTargets({
   logo: {
     source: markerSource,
     orientation: "Up",
-    physicalWidth: 0.076 // real world width in meters
+    physicalWidth: 0.1875 // real world width in meters
   }
 });
 

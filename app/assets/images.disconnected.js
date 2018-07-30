@@ -3,7 +3,7 @@
 const images = {
   '/assets/img/banner.jpg': require('./img/banner.jpg'),
   '/data/media/img/sc_logo.png': require('../data/media/img/sc_logo.png'),
-  '/data/media/img/ar-marker.png': require('../data/media/img/ar-marker2.png'),
+  '/data/media/img/ar-marker.png': require('../data/media/img/ar-marker.png'),
 };
 
 const modelPath = '../data/media/model/';
@@ -50,7 +50,7 @@ const model = {
     ],
     type: 'VRX',
     position: [0,0,0],
-    scale: [.03, .03, .03]
+    scale: [.04, .04, .04]
   },
   margarita: {
     source: require(`${modelPath}margarita/margarita.vrx`),
