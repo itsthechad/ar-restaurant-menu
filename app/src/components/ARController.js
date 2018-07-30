@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
-import { model } from 'static-assets';
+import { images, model } from 'static-assets';
 
 import {
   ViroARSceneNavigator,
@@ -11,19 +11,23 @@ import {
   ViroAmbientLight,
   ViroNode,
   ViroSpotLight,
-  Viro3DObject
+  Viro3DObject,
+  ViroARTrackingTargets,
+  ViroARImageMarker
 } from 'react-viro';
 
 // See instructions in ./cofig.example.js for setting up Viro API key
 import { config } from '../config';
 
 const VIRO_API_KEY = config.viroAPIKey;
+const markerSource = images['/data/media/img/ar-marker.png'];
 
 class ARController extends React.Component {
   constructor() {
     super();
 
     this.state = {
+      modelIsHovered: false,
       currentCategory: 0,
       currentItemArray: []  // Will hold the current item index for each category
     }
@@ -46,7 +50,7 @@ class ARController extends React.Component {
 
   render() {
     var { fields: { items } } = this.props;
-    const { currentCategory, currentItemArray } = this.state;
+    const { modelIsHovered, currentCategory, currentItemArray } = this.state;
 
     var currentItem = currentItemArray[currentCategory];
 
@@ -61,12 +65,14 @@ class ARController extends React.Component {
 
         { this.renderGestureRecognizer() }
 
-        <Text style={styles.itemText} >
-          {/* Debugging version */}
-          { `${items[currentCategory].fields.category}(${currentCategory}) / ${items[currentCategory].fields.items[currentItem].displayName}(${currentItem})` }
-          {/* Actual version */}
-          {/* { `${items[currentCategory].fields.category} / ${items[currentCategory].fields.items[currentItem].displayName}` } */}
-        </Text>
+        { modelIsHovered &&
+          <Text style={styles.itemText} >
+            {/* Debugging version */}
+            { `${items[currentCategory].fields.category}(${currentCategory}) / ${items[currentCategory].fields.items[currentItem].displayName}(${currentItem})` }
+            {/* Actual version */}
+            {/* { `${items[currentCategory].fields.category} / ${items[currentCategory].fields.items[currentItem].displayName}` } */}
+          </Text>
+        }
 
         </View>
     );
@@ -84,29 +90,34 @@ class ARController extends React.Component {
     return (
       <ViroARScene>
         <ViroAmbientLight color={"#aaaaaa"} influenceBitMask={1} />
-        <ViroNode position={[0, 0, -1]} >
-          <ViroSpotLight
-            innerAngle={5}
-            outerAngle={45}
-            direction={[0, -1, -.2]}
-            position={[0, 3, 0]}
-            color="#ffffff"
-            castsShadow={true}
-            influenceBitMask={4}
-            shadowMapSize={2048}
-            shadowNearZ={2}
-            shadowFarZ={5}
-            shadowOpacity={.7} />
-          <Viro3DObject
-            source={currentModel.source}
-            resources={[...currentModel.resources]}
-            position={currentModel.position}
-            scale={currentModel.scale}
-            type={currentModel.type}
-            lightReceivingBitMask={5}
-            shadowCastingBitMask={4}
-            onDrag={this.onDrag} />
-        </ViroNode>
+        <ViroARImageMarker target={"logo"} onAnchorFound={this._onAnchorFound} pauseUpdates={this.state.pauseUpdates}>
+          <ViroNode position={[0, 0, 0]} >
+            <ViroSpotLight
+              innerAngle={5}
+              outerAngle={45}
+              direction={[0, -1, -.2]}
+              position={[0, 3, 0]}
+              color="#ffffff"
+              castsShadow={true}
+              influenceBitMask={4}
+              shadowMapSize={2048}
+              shadowNearZ={2}
+              shadowFarZ={5}
+              shadowOpacity={.7} />
+            <Viro3DObject
+              onHover={(isHovering) => {
+                this.setState({ modelIsHovered: isHovering });
+              }}
+              source={currentModel.source}
+              resources={[...currentModel.resources]}
+              position={currentModel.position}
+              scale={currentModel.scale}
+              type={currentModel.type}
+              lightReceivingBitMask={5}
+              shadowCastingBitMask={4}
+              onDrag={this.onDrag} />
+          </ViroNode>
+        </ViroARImageMarker>
       </ViroARScene>
     );
   }
@@ -177,6 +188,14 @@ class ARController extends React.Component {
     }
   }
 } // ARController
+
+ViroARTrackingTargets.createTargets({
+  logo: {
+    source: markerSource,
+    orientation: "Up",
+    physicalWidth: 0.076 // real world width in meters
+  }
+});
 
 const styles = StyleSheet.create({
   itemText: {

@@ -3,6 +3,7 @@
 const images = {
   '/assets/img/banner.jpg': require('./img/banner.jpg'),
   '/data/media/img/sc_logo.png': require('../data/media/img/sc_logo.png'),
+  '/data/media/img/ar-marker.png': require('../data/media/img/ar-marker2.png'),
 };
 
 const modelPath = '../data/media/model/';
@@ -15,8 +16,8 @@ const model = {
       require(`${modelPath}object_soccerball/object_soccer_ball_specular.png`),
     ],
     type: 'VRX',
-    position: [0, 0, -1],
-    scale: [.5, .5, .5]
+    position: [0,0,0],
+    scale: [.1, .1, .1]
   },
   emojiSmile: {
     source: require(`${modelPath}emoji_smile/emoji_smile.vrx`),
@@ -26,8 +27,8 @@ const model = {
       require(`${modelPath}emoji_smile/emoji_smile_specular.png`),
     ],
     type: 'VRX',
-    position: [0, 0, -1],
-    scale: [.3, .3, .3]
+    position: [0,0,0],
+    scale: [.06, .06, .06]
   },
   emojiAngry: {
     source: require(`${modelPath}emoji_angry/emoji_angry.vrx`),
@@ -37,8 +38,8 @@ const model = {
       require(`${modelPath}emoji_angry/emoji_angry_specular.png`),
     ],
     type: 'VRX',
-    position: [0, 0, -1],
-    scale: [.3, .3, .3]
+    position: [0,0,0],
+    scale: [.06, .06, .06]
   },
   cake: {
     source: require(`${modelPath}cake/cake.vrx`),
@@ -48,8 +49,8 @@ const model = {
       require(`${modelPath}cake/NRS_001_Bottom.jpg`),
     ],
     type: 'VRX',
-    position: [0, 0, -1],
-    scale: [.2, .2, .2]
+    position: [0,0,0],
+    scale: [.03, .03, .03]
   },
   margarita: {
     source: require(`${modelPath}margarita/margarita.vrx`),
@@ -61,8 +62,8 @@ const model = {
       require(`${modelPath}margarita/Color_F13.jpg`)
     ],
     type: 'VRX',
-    position: [0, 0, -1],
-    scale: [.01, .01, .01]
+    position: [0,0,0],
+    scale: [.005, .005, .005]
   },
   mixdrink: {
     source: require(`${modelPath}mixdrink/mixdrink.vrx`),
@@ -73,8 +74,8 @@ const model = {
       require(`${modelPath}mixdrink/_7.jpg`)
     ],
     type: 'VRX',
-    position: [0, 0, -1],
-    scale: [.01, .01, .01]
+    position: [0,0,0],
+    scale: [.005, .005, .005]
   },
   applestrudel: {
     source: require(`${modelPath}applestrudel/applestrudel.vrx`),
@@ -84,8 +85,8 @@ const model = {
       require(`${modelPath}applestrudel/applestrudel_nmap.jpg`)
     ],
     type: 'VRX',
-    position: [0, 0, -1],
-    scale: [.02, .02, .02]
+    position: [0,0,0],
+    scale: [.003, .003, .003]
   }
 };
 
