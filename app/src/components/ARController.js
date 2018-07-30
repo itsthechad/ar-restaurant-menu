@@ -13,7 +13,8 @@ import {
   ViroSpotLight,
   Viro3DObject,
   ViroARTrackingTargets,
-  ViroARImageMarker
+  ViroARImageMarker,
+  ViroQuad
 } from 'react-viro';
 
 // See instructions in ./cofig.example.js for setting up Viro API key
@@ -89,35 +90,46 @@ class ARController extends React.Component {
 
     return (
       <ViroARScene>
-        <ViroAmbientLight color={"#aaaaaa"} influenceBitMask={1} />
+
+        <ViroAmbientLight color={"#aaaaaa"} />
+
         <ViroARImageMarker target={"logo"} onAnchorFound={this._onAnchorFound} pauseUpdates={this.state.pauseUpdates}>
+          
           <ViroNode position={[0, 0, 0]} >
+
             <ViroSpotLight
               innerAngle={5}
-              outerAngle={45}
-              direction={[0, -1, -.2]}
+              outerAngle={5}
+              direction={[0, -1, 0]}
               position={[0, 3, 0]}
               color="#ffffff"
               castsShadow={true}
-              influenceBitMask={4}
               shadowMapSize={2048}
               shadowNearZ={2}
-              shadowFarZ={5}
-              shadowOpacity={.7} />
+              shadowFarZ={3}
+              shadowOpacity={.6} />
+
             <Viro3DObject
-              onHover={(isHovering) => {
-                this.setState({ modelIsHovered: isHovering });
-              }}
               source={currentModel.source}
               resources={[...currentModel.resources]}
               position={currentModel.position}
               scale={currentModel.scale}
               type={currentModel.type}
-              lightReceivingBitMask={5}
-              shadowCastingBitMask={4}
+              onHover={(isHovering) => {
+                this.setState({ modelIsHovered: isHovering });
+              }}
               onDrag={this.onDrag} />
+
+            <ViroQuad
+              rotation={[-90, 0, 0]}
+              position={[0, -0.001, 0]}
+              width={2.5} height={2.5}
+              arShadowReceiver={true} />
+
           </ViroNode>
+
         </ViroARImageMarker>
+
       </ViroARScene>
     );
   }
