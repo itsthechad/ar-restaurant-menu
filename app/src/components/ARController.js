@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import Animated3DObject from './Animated3DObject';
 
 import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
 
@@ -9,9 +10,7 @@ import {
   ViroARSceneNavigator,
   ViroARScene,
   ViroAmbientLight,
-  ViroNode,
   ViroSpotLight,
-  Viro3DObject,
   ViroARTrackingTargets,
   ViroARImageMarker,
   ViroQuad
@@ -30,16 +29,18 @@ class ARController extends React.Component {
     this.state = {
       modelIsHovered: false,
       currentCategory: 0,
-      currentItemArray: []  // Will hold the current item index for each category
+      currentItemArray: [],  // Will hold the current item index for each category
+      anchorFound: false
     }
 
     this.renderScene = this.renderScene.bind(this);
     this.renderGestureRecognizer = this.renderGestureRecognizer.bind(this);
+    this.onAnchorFound = this.onAnchorFound.bind(this);
     this.onSwipe = this.onSwipe.bind(this);
   }
 
   componentWillMount() {
-    var { fields: { items } } = this.props;
+    let { fields: { items } } = this.props;
 
     // Initialize each category's item index to zero
     this.setState({
@@ -50,10 +51,10 @@ class ARController extends React.Component {
   }
 
   render() {
-    var { fields: { items } } = this.props;
+    let { fields: { items } } = this.props;
     const { modelIsHovered, currentCategory, currentItemArray } = this.state;
 
-    var currentItem = currentItemArray[currentCategory];
+    let currentItem = currentItemArray[currentCategory];
 
     return (
       <View style={{ flex: 1 }}>
@@ -66,9 +67,10 @@ class ARController extends React.Component {
 
         { this.renderGestureRecognizer() }
 
+        {/* Show text only when user is hovered on 3d model */}
         { modelIsHovered &&
           <Text style={styles.itemText} >
-            {/* Debugging version */}
+            {/* Debugging version with indices */}
             { `${items[currentCategory].fields.category}(${currentCategory}) / ${items[currentCategory].fields.items[currentItem].displayName}(${currentItem})` }
             {/* Actual version */}
             {/* { `${items[currentCategory].fields.category} / ${items[currentCategory].fields.items[currentItem].displayName}` } */}
@@ -80,10 +82,10 @@ class ARController extends React.Component {
   }
 
   renderScene() {
-    var { fields: { items } } = this.props;
-    var { currentCategory, currentItemArray } = this.state;
+    let { fields: { items } } = this.props;
+    let { currentCategory, currentItemArray, anchorFound } = this.state;
 
-    var currentItem = currentItemArray[currentCategory];
+    let currentItem = currentItemArray[currentCategory];
 
     const modelName = items[currentCategory].fields.items[currentItem].name;
     const currentModel = model[modelName];
@@ -93,40 +95,38 @@ class ARController extends React.Component {
 
         <ViroAmbientLight color={"#aaaaaa"} />
 
-        <ViroARImageMarker target={"logo"} onAnchorFound={this._onAnchorFound} pauseUpdates={this.state.pauseUpdates}>
+        <ViroARImageMarker target={"logo"}
+          onAnchorFound={this.onAnchorFound} >
           
-          <ViroNode position={[0, 0, 0]} >
+          <ViroSpotLight
+            innerAngle={5}
+            outerAngle={5}
+            direction={[0, -1, 0]}
+            position={[0, 3, 0]}
+            color="#ffffff"
+            castsShadow={true}
+            shadowMapSize={2048}
+            shadowNearZ={2}
+            shadowFarZ={3}
+            shadowOpacity={.6} />
 
-            <ViroSpotLight
-              innerAngle={5}
-              outerAngle={5}
-              direction={[0, -1, 0]}
-              position={[0, 3, 0]}
-              color="#ffffff"
-              castsShadow={true}
-              shadowMapSize={2048}
-              shadowNearZ={2}
-              shadowFarZ={3}
-              shadowOpacity={.6} />
+          <Animated3DObject
+            key={modelName}
+            anchorFound={anchorFound}
+            source={currentModel.source}
+            resources={currentModel.resources}
+            position={currentModel.position}
+            scale={currentModel.scale}
+            type={currentModel.type}
+            onHover={(isHovering) => {
+              this.setState({ modelIsHovered: isHovering });
+            }} />
 
-            <Viro3DObject
-              source={currentModel.source}
-              resources={[...currentModel.resources]}
-              position={currentModel.position}
-              scale={currentModel.scale}
-              type={currentModel.type}
-              onHover={(isHovering) => {
-                this.setState({ modelIsHovered: isHovering });
-              }}
-              onDrag={this.onDrag} />
-
-            <ViroQuad
-              rotation={[-90, 0, 0]}
-              position={[0, -0.001, 0]}
-              width={2.5} height={2.5}
-              arShadowReceiver={true} />
-
-          </ViroNode>
+          <ViroQuad
+            rotation={[-90, 0, 0]}
+            position={[0, -0.001, 0]}
+            width={2.5} height={2.5}
+            arShadowReceiver={true} />
 
         </ViroARImageMarker>
 
@@ -155,16 +155,21 @@ class ARController extends React.Component {
     );
   }
 
+  onAnchorFound() {
+    console.log('anchor found');
+    this.setState({ anchorFound: true });
+  }
+
   onSwipe(direction, state) {
-    var { fields: { items } } = this.props;
+    let { fields: { items } } = this.props;
     const { currentCategory, currentItemArray } = this.state;
     const { SWIPE_UP, SWIPE_DOWN, SWIPE_LEFT, SWIPE_RIGHT } = swipeDirections;
 
-    var currentItem = currentItemArray[currentCategory];
+    let currentItem = currentItemArray[currentCategory];
 
-    var newCategory;
-    var newItem;
-    var newItemArray = [...currentItemArray];
+    let newCategory;
+    let newItem;
+    let newItemArray = [...currentItemArray];
 
     switch (direction) {
       case SWIPE_DOWN:
