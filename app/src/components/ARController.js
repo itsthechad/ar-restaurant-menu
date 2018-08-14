@@ -18,8 +18,9 @@ import {
 
 // See instructions in ./cofig.example.js for setting up Viro API key
 import { config } from '../config';
-
 const VIRO_API_KEY = config.viroAPIKey;
+
+// Specify the target marker
 const markerSource = images['/data/media/img/ar-marker.png'];
 
 class ARController extends React.Component {
@@ -34,15 +35,17 @@ class ARController extends React.Component {
     }
 
     this.renderScene = this.renderScene.bind(this);
+    this.renderTextContainer = this.renderTextContainer.bind(this);
     this.renderGestureRecognizer = this.renderGestureRecognizer.bind(this);
     this.onAnchorFound = this.onAnchorFound.bind(this);
     this.onSwipe = this.onSwipe.bind(this);
   }
 
   componentWillMount() {
-    let { fields: { items } } = this.props;
+    const { fields: { items } } = this.props;
 
-    // Initialize each category's item index to zero
+    // Initialize each category's item index to zero.
+    // This means when we go to a category for the first time, we'll start at the first item in that category.
     this.setState({
       currentItemArray: items.map((item) => {
         return 0;
@@ -51,34 +54,58 @@ class ARController extends React.Component {
   }
 
   render() {
-    let { fields: { items } } = this.props;
-    const { modelIsHovered, currentCategory, currentItemArray } = this.state;
-
-    let currentItem = currentItemArray[currentCategory];
+    const { modelIsHovered } = this.state;
 
     return (
       <View style={{ flex: 1 }}>
 
+        {/* Our AR Scene */}
         <ViroARSceneNavigator
-          initialScene={{
-            scene: this.renderScene
-          }}
+          initialScene={{ scene: this.renderScene }}
           apiKey={VIRO_API_KEY} />
 
-        { this.renderGestureRecognizer() }
-
-        {/* Show text only when user is hovered on 3d model */}
-        { modelIsHovered &&
-          <Text style={styles.itemText} >
-            {/* Debugging version with indices */}
-            { `${items[currentCategory].fields.category}(${currentCategory}) / ${items[currentCategory].fields.items[currentItem].displayName}(${currentItem})` }
-            {/* Actual version */}
-            {/* { `${items[currentCategory].fields.category} / ${items[currentCategory].fields.items[currentItem].displayName}` } */}
-          </Text>
+        {/* Reticle */}
+        { !modelIsHovered &&
+          <View style={styles.reticle} />
         }
 
-        </View>
+        {/* Instructions text and Desctiption text */}
+        { this.renderTextContainer() }
+
+        {/* Handle swipe input */}
+        { this.renderGestureRecognizer() }
+
+      </View>
     );
+  }
+
+  renderTextContainer() {
+    const { fields: { items } } = this.props;
+    const { anchorFound, modelIsHovered, currentCategory, currentItemArray } = this.state;
+
+    const currentItem = currentItemArray[currentCategory];
+
+    return (
+      <View style={styles.textView}>
+        {/* Instructions - "Find the target" */}
+        { !anchorFound &&
+          <Text style={styles.instructionsText} >
+            Find your plate...
+          </Text>
+        }
+        {/* Description text - shown only when user is hovered on 3d model */ }
+        { modelIsHovered &&
+            <React.Fragment>
+              <Text style={styles.categoryText} >
+                {items[currentCategory].fields.category}
+              </Text>
+              <Text style={styles.itemText} >
+                {items[currentCategory].fields.items[currentItem].displayName}
+              </Text>
+            </React.Fragment>
+        }
+      </View>
+    );    
   }
 
   renderScene() {
@@ -93,11 +120,15 @@ class ARController extends React.Component {
     return (
       <ViroARScene>
 
+        {/* Ambient light to give the 3d objects basic lighting */}
         <ViroAmbientLight color={"#aaaaaa"} />
 
-        <ViroARImageMarker target={"logo"}
+        {/* The items inside the ViroARImageMarker won't appear until the specified marker is found */}
+        <ViroARImageMarker
+          target={"logo"}
           onAnchorFound={this.onAnchorFound} >
           
+          {/* The primary light for the 3d objects - casts shadow */}
           <ViroSpotLight
             innerAngle={5}
             outerAngle={5}
@@ -110,6 +141,7 @@ class ARController extends React.Component {
             shadowFarZ={3}
             shadowOpacity={.6} />
 
+          {/* A Viro3DObject component wrapped with logic for animating on load */}
           <Animated3DObject
             key={modelName}
             anchorFound={anchorFound}
@@ -122,6 +154,7 @@ class ARController extends React.Component {
               this.setState({ modelIsHovered: isHovering });
             }} />
 
+          {/* Surface to receive shadows */}
           <ViroQuad
             rotation={[-90, 0, 0]}
             position={[0, -0.001, 0]}
@@ -135,6 +168,13 @@ class ARController extends React.Component {
   }
 
   renderGestureRecognizer() {
+    const { modelIsHovered } = this.state;
+
+    // Don't allow swiping unless user is hovered on model
+    if (!modelIsHovered) {
+      return;
+    }
+
     const swipeConfig = {
       velocityThreshold: 0.3,
       directionalOffsetThreshold: 80
@@ -215,12 +255,55 @@ ViroARTrackingTargets.createTargets({
 });
 
 const styles = StyleSheet.create({
-  itemText: {
+  reticle: {
+    flex: 1,
+    height: 2,
+    width: 2,
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    backgroundColor: 'white',
+    borderRadius: 3
+  },
+  textView: {
+    flex: 1,
+    height: '100%',
+    width: '100%',
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: 0,
+    backgroundColor: '#00000000'
+  },
+  instructionsText: {
+    backgroundColor: '#00000000',
+    position: 'relative',
+    top: -30,
+    fontSize: 25,
+    fontWeight: 'bold',
+    textShadowColor: 'rgba(256, 256, 256, 0.5)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 5
+  },
+  categoryText: {
     position: 'absolute',
     top: 40,
     left: 40,
-    fontSize: 40,
-    fontWeight: 'bold'
+    fontSize: 35,
+    fontWeight: 'bold',
+    textShadowColor: 'rgba(256, 256, 256, 0.5)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 5
+  },
+  itemText: {
+    position: 'absolute',
+    top: 70,
+    left: 40,
+    fontSize: 55,
+    fontWeight: 'bold',
+    textShadowColor: 'rgba(256, 256, 256, 0.5)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 5
   }
 });
 

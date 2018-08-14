@@ -13,13 +13,13 @@
                 "items": [
                   {
                     "name": "margarita",
-                    "displayName": "margarita",
+                    "displayName": "Margarita",
                     "description": "Description field",
                     "nutrition": "Nutrition field"
                   },
                   {
                     "name": "mixdrink",
-                    "displayName": "mixdrink",
+                    "displayName": "Mixdrink",
                     "description": "Description field",
                     "nutrition": "Nutrition field"
                   },
@@ -94,25 +94,25 @@
                 "items": [
                   {
                     "name": "cake",
-                    "displayName": "cake",
+                    "displayName": "Cake",
                     "description": "Description field",
                     "nutrition": "Nutrition field"
                   },
                   {
                     "name": "applestrudel",
-                    "displayName": "applestrudel",
+                    "displayName": "Apple Strudel",
                     "description": "Description field",
                     "nutrition": "Nutrition field"
                   },
                   {
                     "name": "emojiSmile",
-                    "displayName": "Bread",
+                    "displayName": "Smile Dessert",
                     "description": "Description field and warm",
                     "nutrition": "Nutrition field"
                   },
                   {
                     "name": "soccerBall",
-                    "displayName": "Chips",
+                    "displayName": "Soccer Ball Cake",
                     "description": "Description field",
                     "nutrition": "Nutrition field"
                   }
