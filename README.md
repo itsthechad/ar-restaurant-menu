@@ -27,6 +27,8 @@ The installation process for all the necessary Android/iOS dependencies and tool
 
 1. In a new folder, clone or download this ar-restaurant-menu repo.
 
+1. In `ar-restaurant-menu/app/src/`, folow the instructions to create and setup your Viro API key.
+
 1. Navigate to `ar-restaurant-menu/app`
 
 1. Run `npm install`
@@ -67,12 +69,19 @@ The installation process for all the necessary Android/iOS dependencies and tool
 1. The app should run on your device.
 
 # Setup your AR target image
-The app currently triggers of a visual target, meaning no AR objects will appear until the app finds that target. Go to `ar-restaurant-menu/app/data/media/img/` and print out the `ar-marker.png` image on a standard 8.5x11 piece of paper. The image should print to a width of about 18.75cm. If it's larger or smaller, I suggest updating the target size in `ARController.js` to match the width of the image in your printout. The accuracy of this width greatly affects the stability of the AR.
+The app currently triggers off a visual target, meaning no AR objects will appear until the app finds that target. Go to `ar-restaurant-menu/app/data/media/img/` and print out the `ar-marker.png` image on a standard 8.5x11 piece of paper. The image should print to a width of about 18.75cm. If it's larger or smaller, I suggest updating the target size in `ARController.js` to match the width of the image in your printout. The accuracy of this width greatly affects the stability of the AR.
 
 # Play with the app
-* When the app first starts, it directs you to find your "plate". Point the camera at the AR target image, and the first menu item should appear.
+* When the app first starts, it directs you to find your "plate". Point the camera at the AR target image, and the first menu item should appear. If it doesn't, try moving the camera around to get the target image more in the frame or more straight on.
 * Swipe left or right to view different items within the current category.
 * Swipe up or down to change categories.
+
+# Still todo:
+* Adding quality 3d food models
+* Tapping on an item to view details, nutritional info, etc.
+* Incorporating other AR elements like animated characters on the table or an AR portal with a view into the restaurant's kitchen
+* Lots of polishing - more instructions, more animations, better UI
+* Perhaps remove the need for a plate/target.
 
 # References
 This project was cobbled together using the following sources and guides:
