@@ -1,9 +1,9 @@
 
-# JSS + React Native + Viro = Sitecore AR/VR
+# Augmented Reality (AR) Restaurant Menu App (JSS + React Native + Viro = Sitecore AR/VR)
 
-This is a very rough, in-progress attempt to integrate [Viro's AR/VR library](https://viromedia.com/) into JSS' basic-sample-react-native project. I started by forking the [JSS repo](https://github.com/Sitecore/jss) and following [Viro's instructions for integrating with an existing React Native project](https://docs.viromedia.com/docs/integrating-with-react-native-projects). Of course, it wasn't so simple, so I figured creating this starting project with that process out of the way would help myself and, possibly, others.
+This is an in-progress proof-of-concept for an AR restaurant menu. The idea: Diners at a restaurant use the AR app to preview their food right in front of them, life-size and in 3D.
 
-So that's what this is: a rough starting point for creating JSS/Viro apps.
+The app is based on my [JSS-Viro starter project](https://github.com/itsthechad/jss-viro) which is itself still rough and unfinished.
 
 # Limitations
 
@@ -25,28 +25,28 @@ The installation process for all the necessary Android/iOS dependencies and tool
 
 1. Ensure you have completed the Prerequisites section and have confirmed you're able to run the `AwesomeProject` sample that the instructions direct you to create.
 
-1. In a new folder, clone or download this jss-viro repo.
+1. In a new folder, clone or download this ar-restaurant-menu repo.
 
-1. Navigate to `jss-viro/basic-sample-react-native`
+1. Navigate to `ar-restaurant-menu/app`
 
 1. Run `npm install`
 
 1. Make sure you have cocoapods. Type `brew install cocoapods` to install.
 	* (Cocoapods is like npm for Xcode projects. The next two steps will setup more required dependencies.)
 
-1. Navigate to `jss-viro/basic-sample-react-native/ios`
+1. Navigate to `ar-restaurant-menu/app/ios`
 
 1. Run `pod install` (installs dependencies listed in Podfile)
 
 1. Cause an error and then fix it (This is an unfortunate step I don't know how to get around yet. The below fix is taken from [this Viro page](https://docs.viromedia.com/docs/integrating-with-react-native-projects)):
 
-	1. In `jss-viro/basic-sample-react-native`, run `npm run start-ios`
+	1. In `ar-restaurant-menu/app`, run `npm run start-ios`
 
 	1. Two Terminal windows should open, and one will ultimately result in an error regarding vlog_is_on.cc and duplicate symbols.
 
 	1. Close Terminal
 
-	1. Open `jss-viro/basic-sample-react-native/node_modules/react-native/third-party/glog-0.3.4/src/vlog_is_on.cc`
+	1. Open `ar-restaurant-menu/app/node_modules/react-native/third-party/glog-0.3.4/src/vlog_is_on.cc`
 
 	1. Change the following lines to match the highlighted bits below:
 
@@ -56,24 +56,27 @@ The installation process for all the necessary Android/iOS dependencies and tool
 
 		* Line 133: const char* vmodule = **FLAGS_vmodule2**.c_str()
 
-1. Go back to `jss-viro/basic-sample-react-native`, and run `npm run start-ios` again. The build should succeed this time. Leave these tabs open in Terminal.
+1. Go back to `ar-restaurant-menu/app`, and run `npm run start-ios` again. The build should succeed this time. Leave these tabs open in Terminal.
 
-1. Now open `jss-viro/basic-sample-react-native/ios/BasicSampleReactNative.xcworkspace` within Xcode.
+1. Now open `ar-restaurant-menu/app/ios/BasicSampleReactNative.xcworkspace` within Xcode.
 
 1. Go through the Xcode signing process ([see here](https://facebook.github.io/react-native/docs/running-on-device)).
 
 1. In Xcode, choose your device (plugged in or [setup wirelessly](https://medium.com/swiftist/wireless-debugging-xcode-b6e98e26e022)) and then run.
+
 1. The app should run on your device.
 
-# Now What?
-Try the following within data/routes/en.json
-* Change "ARScene" to "VRScene". Now the app loads a VR scene instead of the default AR scene.
-* Edit the position on one of the model objects.
-* Remove a model object, or duplicate one with a modified position.
-* Change "hideComponent" to "true" for the "BottomUI" component. This is recommended when using the VR scene.
+# Setup your AR target image
+The app currently triggers of a visual target, meaning no AR objects will appear until the app finds that target. Go to `ar-restaurant-menu/app/data/media/img/` and print out the `ar-marker.png` image on a standard 8.5x11 piece of paper. The image should print to a width of about 18.75cm. If it's larger or smaller, I suggest updating the target size in `ARController.js` to match the width of the image in your printout. The accuracy of this width greatly affects the stability of the AR.
+
+# Play with the app
+* When the app first starts, it directs you to find your "plate". Point the camera at the AR target image, and the first menu item should appear.
+* Swipe left or right to view different items within the current category.
+* Swipe up or down to change categories.
 
 # References
 This project was cobbled together using the following sources and guides:
+* https://github.com/itsthechad/jss-viro
 * https://jss.sitecore.net/#/react-native?id=sitecore-jss-react-native
 * https://github.com/Sitecore/jss/tree/master/samples/basic-sample-react-native
 * https://docs.viromedia.com/docs/integrating-with-react-native-projects
